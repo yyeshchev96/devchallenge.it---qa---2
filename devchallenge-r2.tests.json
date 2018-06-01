@@ -1,0 +1,3309 @@
+{
+	"info": {
+		"name": "devchallenge-r2",
+		"_postman_id": "80c97c92-ceef-a3bf-7c1b-3e521c2cb10c",
+		"description": "Weather api tests for devchallenge 2018 - Round 2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Current weather data",
+			"description": "",
+			"item": [
+				{
+					"name": "Coordinates corresponds to same city",
+					"description": "",
+					"item": [
+						{
+							"name": "GET coords and city name by id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f339b037-26d1-4329-81d9-b263dc31f089",
+										"type": "text/javascript",
+										"exec": [
+											"var data = JSON.parse(responseBody);",
+											"",
+											"postman.setEnvironmentVariable(\"search_lon\", data.coord.lon);",
+											"postman.setEnvironmentVariable(\"search_lat\", data.coord.lat);",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw": "{{URL}}/data/2.5/weather?id={{city_id}}&APPID={{APPID}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"data",
+										"2.5",
+										"weather"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{city_id}}",
+											"equals": true
+										},
+										{
+											"key": "APPID",
+											"value": "{{APPID}}",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "GET Weather by geo coords returns same city name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "de8791c2-271c-49cd-ac02-09303519623b",
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+											" ",
+											"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+											" ",
+											"if (contentTypeHeaderExists) {",
+											" tests[\"Content-Type is application/json\"] =",
+											" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+											" }",
+											"",
+											"var data = JSON.parse(responseBody);",
+											"",
+											"tests[\"Returned correct city name by coordinates\"] = data.name== postman.getEnvironmentVariable(\"city_name\");",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw": "{{URL}}/data/2.5/weather?APPID={{APPID}}&lat={{search_lat}}&lon={{search_lon}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"data",
+										"2.5",
+										"weather"
+									],
+									"query": [
+										{
+											"key": "APPID",
+											"value": "{{APPID}}",
+											"equals": true
+										},
+										{
+											"key": "lat",
+											"value": "{{search_lat}}",
+											"equals": true
+										},
+										{
+											"key": "lon",
+											"value": "{{search_lon}}",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "negative tests",
+					"description": "",
+					"item": [
+						{
+							"name": "Weather with empty city name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "75bcf93d-ca04-4542-b15b-005b23652fd1",
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 400\"] = responseCode.code === 400;",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw": "{{URL}}/data/2.5/weather?q=&APPID={{APPID}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"data",
+										"2.5",
+										"weather"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "",
+											"equals": true
+										},
+										{
+											"key": "APPID",
+											"value": "{{APPID}}",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Weather with empty geo coords",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "5f1ea1c5-fe35-400b-9be3-2678381f5329",
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 400\"] = responseCode.code === 400;"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw": "{{URL}}/data/2.5/weather?APPID={{APPID}}&lat=&lon=",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"data",
+										"2.5",
+										"weather"
+									],
+									"query": [
+										{
+											"key": "APPID",
+											"value": "{{APPID}}",
+											"equals": true
+										},
+										{
+											"key": "lat",
+											"value": "",
+											"equals": true
+										},
+										{
+											"key": "lon",
+											"value": "",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Weather with incorrect city name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e080059f-0fca-4f98-bfc9-23de1d83d570",
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 404\"] = responseCode.code === 404;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw": "{{URL}}/data/2.5/weather?q=asddsa&APPID={{APPID}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"data",
+										"2.5",
+										"weather"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "asddsa",
+											"equals": true
+										},
+										{
+											"key": "APPID",
+											"value": "{{APPID}}",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Weather with incorrect country code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e080059f-0fca-4f98-bfc9-23de1d83d570",
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 404\"] = responseCode.code === 404;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw": "{{URL}}/data/2.5/weather?q={{city_name}},zz&APPID={{APPID}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"data",
+										"2.5",
+										"weather"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "{{city_name}},zz",
+											"equals": true
+										},
+										{
+											"key": "APPID",
+											"value": "{{APPID}}",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Weather without APPID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3e07cd14-0da6-4e2d-a69b-f25cff8b5747",
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 401\"] = responseCode.code === 401;",
+											"",
+											"",
+											"",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw": "{{URL}}/data/2.5/weather?id={{city_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"data",
+										"2.5",
+										"weather"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{city_id}}",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Weather by city name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b71a0e56-ec41-4e28-ab98-015454fd21d2",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									"tests[\"Response time < 1000ms\"] = responseTime < 1000;",
+									"",
+									"response = [",
+									"    \"coord\",",
+									"    \"lon\",",
+									"    \"lat\",",
+									"    \"weather\",",
+									"    \"temp\",",
+									"    \"pressure\",",
+									"    \"humidity\",",
+									"    \"wind\",",
+									"    \"clouds\",",
+									"    \"country\",",
+									"    \"id\",",
+									"    \"name\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									"",
+									"var data = JSON.parse(responseBody);",
+									"",
+									"tests[\"Returned city is same as in request\"] = postman.getEnvironmentVariable(\"city_name\") == data.name;",
+									"",
+									"",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/weather?q={{city_name}}&APPID={{APPID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "{{city_name}}",
+									"equals": true
+								},
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather by city name with country code",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "592ec14c-dd48-4c50-b685-16353d81189d",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									"",
+									"response = [",
+									"    \"coord\",",
+									"    \"lon\",",
+									"    \"lat\",",
+									"    \"weather\",",
+									"    \"temp\",",
+									"    \"pressure\",",
+									"    \"humidity\",",
+									"    \"wind\",",
+									"    \"clouds\",",
+									"    \"country\",",
+									"    \"id\",",
+									"    \"name\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}response = [",
+									"    \"coord\",",
+									"    \"lon\",",
+									"    \"lat\",",
+									"    \"weather\",",
+									"    \"temp\",",
+									"    \"pressure\",",
+									"    \"humidity\",",
+									"    \"wind\",",
+									"    \"clouds\",",
+									"    \"country\",",
+									"    \"id\",",
+									"    \"name\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									"",
+									"var data = JSON.parse(responseBody);",
+									"",
+									"tests[\"Returned city is same as in request\"] = postman.getEnvironmentVariable(\"city_name\") == data.name;",
+									"",
+									"tests[\"Returned country is same as in request\"] = postman.getEnvironmentVariable(\"country_code\") == data.sys.country.toLowerCase();",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/weather?q={{city_name}},{{country_code}}&APPID={{APPID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "{{city_name}},{{country_code}}",
+									"equals": true
+								},
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather by city ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4da98b3d-d898-426b-9299-cc4468aa8832",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									"response = [",
+									"    \"coord\",",
+									"    \"lon\",",
+									"    \"lat\",",
+									"    \"weather\",",
+									"    \"temp\",",
+									"    \"pressure\",",
+									"    \"humidity\",",
+									"    \"wind\",",
+									"    \"clouds\",",
+									"    \"country\",",
+									"    \"id\",",
+									"    \"name\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									"",
+									"tests[\"Response time < 500ms\"] = responseTime < 500;",
+									"",
+									"var data = JSON.parse(responseBody);",
+									"",
+									"tests[\"Returned cityID is same as in request\"] = postman.getEnvironmentVariable(\"city_id\") == data.id;",
+									"",
+									"",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/weather?id={{city_id}}&APPID={{APPID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{city_id}}",
+									"equals": true
+								},
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather by geographic coordinates",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7b82602a-7cb5-4203-8e21-827cf5ab1053",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									" ",
+									"response = [",
+									"    \"coord\",",
+									"    \"lon\",",
+									"    \"lat\",",
+									"    \"weather\",",
+									"    \"temp\",",
+									"    \"pressure\",",
+									"    \"humidity\",",
+									"    \"wind\",",
+									"    \"clouds\",",
+									"    \"country\",",
+									"    \"id\",",
+									"    \"name\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									"var data = JSON.parse(responseBody);",
+									"",
+									"tests[\"Returned coords is same as in request\"] = (postman.getEnvironmentVariable(\"lat\") == data.coord.lat && postman.getEnvironmentVariable(\"lon\") == data.coord.lon);",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/weather?APPID={{APPID}}&lat={{lat}}&lon={{lon}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								},
+								{
+									"key": "lat",
+									"value": "{{lat}}",
+									"equals": true
+								},
+								{
+									"key": "lon",
+									"value": "{{lon}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather by ZIP code",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "15df3046-56bc-4478-a281-dc2e1ec8cca9",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									" ",
+									" response = [",
+									"    \"coord\",",
+									"    \"lon\",",
+									"    \"lat\",",
+									"    \"weather\",",
+									"    \"temp\",",
+									"    \"pressure\",",
+									"    \"humidity\",",
+									"    \"wind\",",
+									"    \"clouds\",",
+									"    \"country\",",
+									"    \"id\",",
+									"    \"name\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/weather?APPID={{APPID}}&zip={{zip}},{{country_code}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								},
+								{
+									"key": "zip",
+									"value": "{{zip}},{{country_code}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather in Reactange zone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "13049868-8bba-45af-be9c-ad6ccdb89572",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									"response = [",
+									"    \"Lon\",",
+									"    \"Lat\",",
+									"    \"weather\",",
+									"    \"temp\",",
+									"    \"pressure\",",
+									"    \"humidity\",",
+									"    \"wind\",",
+									"    \"clouds\",",
+									"    \"id\",",
+									"    \"name\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									"",
+									"",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/box/city?bbox=12,32,15,37,10&APPID={{APPID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"box",
+								"city"
+							],
+							"query": [
+								{
+									"key": "bbox",
+									"value": "12,32,15,37,10",
+									"equals": true
+								},
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather in Cycle zone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7528dbfc-c102-429c-9f30-9726bb2e4419",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									"response = [",
+									"    \"message\",",
+									"    \"count\",",
+									"    \"weather\",",
+									"    \"temp\",",
+									"    \"pressure\",",
+									"    \"humidity\",",
+									"    \"wind\",",
+									"    \"clouds\",",
+									"    \"id\",",
+									"    \"name\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/find?lat={{lat}}&lon={{lon}}&cnt=10&APPID={{APPID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"find"
+							],
+							"query": [
+								{
+									"key": "lat",
+									"value": "{{lat}}",
+									"equals": true
+								},
+								{
+									"key": "lon",
+									"value": "{{lon}}",
+									"equals": true
+								},
+								{
+									"key": "cnt",
+									"value": "10",
+									"equals": true
+								},
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather in Several cities by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "89bf11dd-c7a0-4e24-a228-ff48a937871f",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									" ",
+									" response = [",
+									"    \"coord\",",
+									"    \"lon\",",
+									"    \"lat\",",
+									"    \"weather\",",
+									"    \"temp\",",
+									"    \"pressure\",",
+									"    \"humidity\",",
+									"    \"visibility\",",
+									"    \"wind\",",
+									"    \"speed\",",
+									"    \"clouds\",",
+									"    \"country\",",
+									"    \"id\",",
+									"    \"name\"",
+									"    ];",
+									"",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									"",
+									"var data = JSON.parse(responseBody);",
+									"",
+									"//check if requested cities are in response",
+									"var cityIdList = postman.getEnvironmentVariable(\"id_list\").split(\",\");",
+									"",
+									"for(var i in cityIdList) {",
+									"    isIdPresent = responseBody.has(cityIdList[i]);",
+									"    tests[cityIdList[i] + \" city ID is present in Response\"] = isIdPresent;",
+									"}",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/group?id={{id_list}}&units=metric&APPID={{APPID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"group"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{id_list}}",
+									"equals": true
+								},
+								{
+									"key": "units",
+									"value": "metric",
+									"equals": true
+								},
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather in ukrainian",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "72091933-c33e-486a-80c6-b84c0861b739",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									"",
+									"var data = JSON.parse(responseBody);",
+									"",
+									"//verify if all letter are ukrainians",
+									"var uaChars = \"АаБбВвГгҐґДдЕеЄєЖжЗзИиІіЇїЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЬьЮюЯя \";",
+									"var uaCounter = 0;",
+									"",
+									"for(var i in data.weather[0].description) {",
+									"    if (uaChars.indexOf(data.weather[0].description[i]) != -1) {",
+									"        uaCounter++;",
+									"    }",
+									"}",
+									"tests[\"Weather description is in ukrainian\"] = uaCounter == (data.weather[0].description).length;",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/weather?id={{city_id}}&APPID={{APPID}}&lang={{lang}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{city_id}}",
+									"equals": true
+								},
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								},
+								{
+									"key": "lang",
+									"value": "{{lang}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather with temp in Celsius",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4ed8b6a5-6b53-4973-9c80-628ed177c430",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									"",
+									"var data = JSON.parse(responseBody);",
+									"",
+									"tests[\"Temp is in range for Celsius\"] = (data.main.temp > -40 && data.main.temp < 45); "
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/weather?id={{city_id}}&APPID={{APPID}}&units=metric",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{city_id}}",
+									"equals": true
+								},
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								},
+								{
+									"key": "units",
+									"value": "metric",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather with temp in Fahrenheit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "12365dc2-8181-42d3-a20b-25711fded727",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									"",
+									"var data = JSON.parse(responseBody);",
+									"",
+									"tests[\"Temp is in range for Fahrenheit\"] = (data.main.temp > -40 && data.main.temp < 145); "
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/weather?id={{city_id}}&APPID={{APPID}}&units=imperial",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{city_id}}",
+									"equals": true
+								},
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								},
+								{
+									"key": "units",
+									"value": "imperial",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather data in XML format",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6a9bac36-3ae1-44a5-b021-a5ec9509a0cd",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/xml\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/xml\");",
+									" }",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/weather?id={{city_id}}&APPID={{APPID}}&units=metric&mode=xml",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{city_id}}",
+									"equals": true
+								},
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								},
+								{
+									"key": "units",
+									"value": "metric",
+									"equals": true
+								},
+								{
+									"key": "mode",
+									"value": "xml",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "5 day / 3 hour forecast",
+			"description": "",
+			"item": [
+				{
+					"name": "Forecast by city name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "384a6007-2967-4654-a09b-e7796d1d67a4",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									" ",
+									"response = [",
+									"    \"weather\",",
+									"    \"temp\",",
+									"    \"pressure\",",
+									"    \"humidity\",",
+									"    \"wind\",",
+									"    \"clouds\",",
+									"    \"country\",",
+									"    \"id\",",
+									"    \"name\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									"var data = JSON.parse(responseBody);",
+									"",
+									"tests[\"Returned forecast has records for 5days/3h\"] = data.list.filter(v=>\"dt_txt\" in v).length == 40;",
+									"",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/forecast?q={{city_name}}&APPID={{APPID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"forecast"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "{{city_name}}",
+									"equals": true
+								},
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Forecast by city ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "38de8400-5e73-4d6e-a50b-e7f047a672fe",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									" ",
+									"response = [",
+									"    \"weather\",",
+									"    \"temp\",",
+									"    \"pressure\",",
+									"    \"humidity\",",
+									"    \"wind\",",
+									"    \"clouds\",",
+									"    \"country\",",
+									"    \"id\",",
+									"    \"name\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									"var data = JSON.parse(responseBody);",
+									"",
+									"tests[\"Returned forecast has records for 5days/3h\"] = data.list.filter(v=>\"dt_txt\" in v).length == 40;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/forecast?id={{city_id}}&APPID={{APPID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"forecast"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{city_id}}",
+									"equals": true
+								},
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Forecast by geographic coordinates",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7b4782ca-d42f-479a-97d5-24cdfb34bf81",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/forecast?APPID={{APPID}}&lat={{lat}}&lon={{lon}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"forecast"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								},
+								{
+									"key": "lat",
+									"value": "{{lat}}",
+									"equals": true
+								},
+								{
+									"key": "lon",
+									"value": "{{lon}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Forecast by ZIP code",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2a8c7f67-69f6-4fbb-99e3-44e65fe7560f",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									" ",
+									" response = [",
+									"    \"coord\",",
+									"    \"lon\",",
+									"    \"lat\",",
+									"    \"weather\",",
+									"    \"temp\",",
+									"    \"pressure\",",
+									"    \"humidity\",",
+									"    \"wind\",",
+									"    \"clouds\",",
+									"    \"country\",",
+									"    \"id\",",
+									"    \"name\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/forecast?APPID={{APPID}}&zip={{zip}},{{country_code}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"forecast"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								},
+								{
+									"key": "zip",
+									"value": "{{zip}},{{country_code}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Weather maps layers",
+			"description": "",
+			"item": [
+				{
+					"name": "Weather map Precipitation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a0f27559-4335-43de-99a5-adb11dff7992",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is image/png\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"image/png\");",
+									" }"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{WeatherMapURL}}/precipitation_new/4/12/6?APPID={{APPID}}",
+							"host": [
+								"{{WeatherMapURL}}"
+							],
+							"path": [
+								"precipitation_new",
+								"4",
+								"12",
+								"6"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather map Clouds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6beab80a-6237-49e8-8c98-fa86d0a06871",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is image/png\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"image/png\");",
+									" }"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{WeatherMapURL}}/clouds_new/4/12/6?APPID={{APPID}}",
+							"host": [
+								"{{WeatherMapURL}}"
+							],
+							"path": [
+								"clouds_new",
+								"4",
+								"12",
+								"6"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather map Sea level",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6beab80a-6237-49e8-8c98-fa86d0a06871",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is image/png\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"image/png\");",
+									" }"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{WeatherMapURL}}/pressure_new/4/12/6?APPID={{APPID}}",
+							"host": [
+								"{{WeatherMapURL}}"
+							],
+							"path": [
+								"pressure_new",
+								"4",
+								"12",
+								"6"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather map Wind speed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6beab80a-6237-49e8-8c98-fa86d0a06871",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is image/png\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"image/png\");",
+									" }"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{WeatherMapURL}}/wind_new/4/12/6?APPID={{APPID}}",
+							"host": [
+								"{{WeatherMapURL}}"
+							],
+							"path": [
+								"wind_new",
+								"4",
+								"12",
+								"6"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather map Temperature",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6beab80a-6237-49e8-8c98-fa86d0a06871",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is image/png\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"image/png\");",
+									" }"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{WeatherMapURL}}/temp_new/4/12/6?APPID={{APPID}}",
+							"host": [
+								"{{WeatherMapURL}}"
+							],
+							"path": [
+								"temp_new",
+								"4",
+								"12",
+								"6"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather map without specifying layer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6c2fe592-6837-4490-8be3-fea6e4eee80b",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 404\"] = responseCode.code === 404;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{WeatherMapURL}}?APPID={{APPID}}",
+							"host": [
+								"{{WeatherMapURL}}"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather map for incorrect layer name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "08d1201d-5ccb-4d2d-b75c-d2daceac9e70",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 400\"] = responseCode.code === 400;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "image/png"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{WeatherMapURL}}/tempfail_new/4/12/6.png?APPID={{APPID}}",
+							"host": [
+								"{{WeatherMapURL}}"
+							],
+							"path": [
+								"tempfail_new",
+								"4",
+								"12",
+								"6.png"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UV index",
+			"description": "",
+			"item": [
+				{
+					"name": "UVI by geo coords",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "478ab316-b13e-42ad-8e1c-a8340ae7feca",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									" ",
+									"response = [",
+									"    \"lat\",",
+									"    \"lon\",",
+									"    \"date_iso\",",
+									"    \"date\",",
+									"    \"value\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									"var data = JSON.parse(responseBody);",
+									"",
+									"tests[\"Returned coords is same as in request\"] = (postman.getEnvironmentVariable(\"lat\") == data.lat && postman.getEnvironmentVariable(\"lon\") == data.lon);",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/uvi?APPID={{APPID}}&lat={{lat}}&lon={{lon}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"uvi"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								},
+								{
+									"key": "lat",
+									"value": "{{lat}}",
+									"equals": true
+								},
+								{
+									"key": "lon",
+									"value": "{{lon}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "UVI by geo coords for date range",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "33860d52-28a7-481c-a3d0-dda7142d167c",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									" ",
+									"response = [",
+									"    \"lat\",",
+									"    \"lon\",",
+									"    \"date_iso\",",
+									"    \"date\",",
+									"    \"value\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									"",
+									"var data = JSON.parse(responseBody);",
+									"console.log(data.filter(v=>\"value\" in v).length);",
+									"",
+									"tests[\"Returned list of objects with UV info\"] = data.filter(v=>\"value\" in v).length > 1;",
+									"",
+									"",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/2.5/uvi/history?APPID={{APPID}}&lat={{lat}}&lon={{lon}}&start=1498049943&end=1498481991",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"uvi",
+								"history"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								},
+								{
+									"key": "lat",
+									"value": "{{lat}}",
+									"equals": true
+								},
+								{
+									"key": "lon",
+									"value": "{{lon}}",
+									"equals": true
+								},
+								{
+									"key": "start",
+									"value": "1498049943",
+									"equals": true
+								},
+								{
+									"key": "end",
+									"value": "1498481991",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Weather stations",
+			"description": "",
+			"item": [
+				{
+					"name": "GET all Weather Stations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ae819a94-8c7a-4156-9831-4488446064c7",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"external_id\": \"SF_TEST_KYIV\",\r\n    \"name\": \"Test Station in Kyiv\",\r\n    \"latitude\": {{lat}},\r\n    \"longitude\": {{lon}},\r\n    \"altitude\": 100\r\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/data/3.0/stations?APPID={{APPID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"3.0",
+								"stations"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Weather Station",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d4e159cc-e6f6-4a8c-ada3-f606fded087f",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 201\"] = responseCode.code === 201;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									" ",
+									"response = [",
+									"    \"ID\",",
+									"    \"external_id\",",
+									"    \"name\",",
+									"    \"latitude\",",
+									"    \"longitude\",",
+									"    \"altitude\",",
+									"    \"rank\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									"var data = JSON.parse(responseBody);",
+									"",
+									"tests[\"Returned coords is same as in request\"] = (postman.getEnvironmentVariable(\"lat\") == data.latitude && postman.getEnvironmentVariable(\"lon\") == data.longitude);",
+									"tests[\"Returned station name is the same as in request\"] = \"Test Station in Kyiv\" == data.name;",
+									"",
+									"",
+									"postman.setEnvironmentVariable(\"stationId\", data.ID);",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"external_id\": \"SF_TEST_KYIV\",\r\n    \"name\": \"Test Station in Kyiv\",\r\n    \"latitude\": {{lat}},\r\n    \"longitude\": {{lon}},\r\n    \"altitude\": 100\r\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/data/3.0/stations?APPID={{APPID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"3.0",
+								"stations"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Weather measurements",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0d499f5f-ecf1-471b-8a6b-59dc6f6ae12b",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 204\"] = responseCode.code === 204;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  {\r\n    \"station_id\": \"{{stationId}}\",\r\n    \"dt\": 1525541300000,\r\n    \"temperature\": 18.7,\r\n    \"wind_speed\": 1.2,\r\n    \"wind_gust\": 3.4,\r\n    \"pressure\": 1021,\r\n    \"humidity\": 87,\r\n    \"rain_1h\": 2,\r\n    \"clouds\": [\r\n        {\r\n            \"condition\": \"NSC\"\r\n        }\r\n    ]\r\n  }\r\n]"
+						},
+						"url": {
+							"raw": "{{URL}}/data/3.0/measurements?APPID={{APPID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"3.0",
+								"measurements"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Weather measurements",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6c1bc6f9-8b7b-46d3-b96d-12ed911bd1f4",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  {\r\n    \"station_id\": \"{{StationId}}\",\r\n    \"dt\": 1479817340,\r\n    \"temperature\": 18.7,\r\n    \"wind_speed\": 1.2,\r\n    \"wind_gust\": 3.4,\r\n    \"pressure\": 1021,\r\n    \"humidity\": 87,\r\n    \"rain_1h\": 2,\r\n    \"clouds\": [\r\n        {\r\n            \"condition\": \"NSC\"\r\n        }\r\n    ]\r\n  }\r\n]"
+						},
+						"url": {
+							"raw": "{{URL}}/data/3.0/measurements?station_id={{stationId}}&type=m&limit=100&from=1525541200000&to=1527778765974&APPID={{APPID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"3.0",
+								"measurements"
+							],
+							"query": [
+								{
+									"key": "station_id",
+									"value": "{{stationId}}",
+									"equals": true
+								},
+								{
+									"key": "type",
+									"value": "m",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "100",
+									"equals": true
+								},
+								{
+									"key": "from",
+									"value": "1525541200000",
+									"equals": true
+								},
+								{
+									"key": "to",
+									"value": "1527778765974",
+									"equals": true
+								},
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Weather Station",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2296a538-45ee-42b1-b365-f23e15bbdff9",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 204\"] = responseCode.code === 204;",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/3.0/stations/{{stationId}}?APPID={{APPID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"3.0",
+								"stations",
+								"{{stationId}}"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete invalid Weather Station",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "15d36747-fc1b-4a14-b77b-9b47ed600d2e",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 400\"] = responseCode.code === 400;",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/3.0/stations/{{stationId}}abc?APPID={{APPID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"3.0",
+								"stations",
+								"{{stationId}}abc"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete unexisting Weather Station copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "829718fa-e036-4a2f-a42d-3d1c63d37667",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 404\"] = responseCode.code === 404;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{URL}}/data/3.0/stations/5babcc2dbe85b20001110b95?APPID={{APPID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"data",
+								"3.0",
+								"stations",
+								"5babcc2dbe85b20001110b95"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Weather alerts",
+			"description": "",
+			"item": [
+				{
+					"name": "Weather allert trigger",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "568284e9-f84f-4944-a969-4cb4b0012232",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 201\"] = responseCode.code === 201;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									" ",
+									"response = [",
+									"    \"_id\",",
+									"    \"alerts\",",
+									"    \"area\",",
+									"    \"conditions\",",
+									"    \"time_period\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									"var data = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"trigger_id\", data._id);",
+									"postman.setEnvironmentVariable(\"original_coords\", data.area[0].coordinates);",
+									"",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"time_period\":{\n      \"start\":{\n         \"expression\":\"after\",\n         \"amount\":132000000\n      },\n      \"end\":{\n         \"expression\":\"after\",\n         \"amount\":432000000\n      }\n   },\n   \"conditions\":[\n      {\n         \"name\":\"temp\",\n         \"expression\":\"$gt\",\n         \"amount\":299\n      }\n   ],\n   \"area\":[\n      {\n         \"type\":\"Point\",\n         \"coordinates\":[\n            53,\n            37\n         ]\n      }\n   ]\n}"
+						},
+						"url": {
+							"raw": "{{WeatherAlertURL}}/triggers?APPID={{APPID}}",
+							"host": [
+								"{{WeatherAlertURL}}"
+							],
+							"path": [
+								"triggers"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather allert trigger by Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "16d99655-85d6-47d5-8963-f47bc6340e08",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									" ",
+									"response = [",
+									"    \"_id\",",
+									"    \"alerts\",",
+									"    \"area\",",
+									"    \"conditions\",",
+									"    \"time_period\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									"var data = JSON.parse(responseBody);",
+									"",
+									"tests[\"Returned correct trigger id\"] = data._id === postman.getEnvironmentVariable(\"trigger_id\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{WeatherAlertURL}}/triggers/{{trigger_id}}?APPID={{APPID}}",
+							"host": [
+								"{{WeatherAlertURL}}"
+							],
+							"path": [
+								"triggers",
+								"{{trigger_id}}"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "All triggers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4bf0405a-c03c-44ef-b3b9-081a9555c76c",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									" ",
+									"response = [",
+									"    \"_id\",",
+									"    \"alerts\",",
+									"    \"area\",",
+									"    \"conditions\",",
+									"    \"time_period\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{WeatherAlertURL}}/triggers?APPID={{APPID}}",
+							"host": [
+								"{{WeatherAlertURL}}"
+							],
+							"path": [
+								"triggers"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Weather allert trigger",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "22ebce5d-3410-4f7d-9e82-5799cd89e692",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									" ",
+									"response = [",
+									"    \"_id\",",
+									"    \"alerts\",",
+									"    \"area\",",
+									"    \"conditions\",",
+									"    \"time_period\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									"var data = JSON.parse(responseBody);",
+									"",
+									"tests[\"Coordinates where changed\"] = data.area[0].coordinates != postman.getEnvironmentVariable(\"original_coords\");",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"time_period\":{\n      \"start\":{\n         \"expression\":\"after\",\n         \"amount\":132000000\n      },\n      \"end\":{\n         \"expression\":\"after\",\n         \"amount\":432000000\n      }\n   },\n   \"conditions\":[\n      {\n         \"name\":\"temp\",\n         \"expression\":\"$gt\",\n         \"amount\":299\n      }\n   ],\n   \"area\":[\n      {\n         \"type\":\"Point\",\n         \"coordinates\":[\n            30,\n            43\n         ]\n      }\n   ]\n}"
+						},
+						"url": {
+							"raw": "{{WeatherAlertURL}}/triggers/{{trigger_id}}?APPID={{APPID}}",
+							"host": [
+								"{{WeatherAlertURL}}"
+							],
+							"path": [
+								"triggers",
+								"{{trigger_id}}"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete trigger by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d73740ba-1b3a-472d-9678-9264d5c559fc",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 204\"] = responseCode.code === 204;",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{WeatherAlertURL}}/triggers/{{trigger_id}}?APPID={{APPID}}",
+							"host": [
+								"{{WeatherAlertURL}}"
+							],
+							"path": [
+								"triggers",
+								"{{trigger_id}}"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get deleted trigger by Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5a848065-e11d-48fe-b824-965193b1be90",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 404\"] = responseCode.code === 404;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{WeatherAlertURL}}/triggers/{{trigger_id}}?APPID={{APPID}}",
+							"host": [
+								"{{WeatherAlertURL}}"
+							],
+							"path": [
+								"triggers",
+								"{{trigger_id}}"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete unexisting trigger",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1ca7af53-72a0-4e40-a7e9-1d9d103dc207",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 404\"] = responseCode.code === 404;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{WeatherAlertURL}}/triggers/5abcf5a70acb8f0ff73d8e25?APPID={{APPID}}",
+							"host": [
+								"{{WeatherAlertURL}}"
+							],
+							"path": [
+								"triggers",
+								"5abcf5a70acb8f0ff73d8e25"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete trigger by invalid id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "de47ddad-8282-4639-9c76-6571799a543e",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 500\"] = responseCode.code === 500;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{WeatherAlertURL}}/triggers/testinvalidtriggerid?APPID={{APPID}}",
+							"host": [
+								"{{WeatherAlertURL}}"
+							],
+							"path": [
+								"triggers",
+								"testinvalidtriggerid"
+							],
+							"query": [
+								{
+									"key": "APPID",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Air pollution",
+			"description": "",
+			"item": [
+				{
+					"name": "Air polution by date and loc",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d0d5a921-a29a-43da-b444-674f3d86a4ed",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									" ",
+									"response = [",
+									"    \"time\",",
+									"    \"location\",",
+									"    \"latitude\",",
+									"    \"longitude\",",
+									"    \"data\",",
+									"    \"precision\",",
+									"    \"pressure\",",
+									"    \"value\"",
+									"    ];",
+									"    ",
+									"for(var i in response) {",
+									"    result = responseBody.has(response[i]);",
+									"    tests[response[i] + \" is present in Response\"] = result;",
+									"}",
+									"",
+									"",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"time_period\":{\n      \"start\":{\n         \"expression\":\"after\",\n         \"amount\":132000000\n      },\n      \"end\":{\n         \"expression\":\"after\",\n         \"amount\":432000000\n      }\n   },\n   \"conditions\":[\n      {\n         \"name\":\"temp\",\n         \"expression\":\"$gt\",\n         \"amount\":299\n      }\n   ],\n   \"area\":[\n      {\n         \"type\":\"Point\",\n         \"coordinates\":[\n            53,\n            37\n         ]\n      }\n   ]\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/pollution/v1/co/0.0,10.0/2016Z.json?appid={{APPID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"pollution",
+								"v1",
+								"co",
+								"0.0,10.0",
+								"2016Z.json"
+							],
+							"query": [
+								{
+									"key": "appid",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Air polution with incorrect date",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "741019a6-7060-45d4-b6bb-3e4f7110f72b",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 400\"] = responseCode.code === 400;",
+									"",
+									"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+									" ",
+									"tests[\"Has Content-Type\"] = contentTypeHeaderExists;",
+									" ",
+									"if (contentTypeHeaderExists) {",
+									" tests[\"Content-Type is application/json\"] =",
+									" responseHeaders[\"Content-Type\"].has(\"application/json\");",
+									" }",
+									"",
+									"var data = JSON.parse(responseBody);",
+									"",
+									"tests[\"Returned message regarding wrong time format\"] = data.message == \"wrong format of time, please, use ISO8601\";",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"time_period\":{\n      \"start\":{\n         \"expression\":\"after\",\n         \"amount\":132000000\n      },\n      \"end\":{\n         \"expression\":\"after\",\n         \"amount\":432000000\n      }\n   },\n   \"conditions\":[\n      {\n         \"name\":\"temp\",\n         \"expression\":\"$gt\",\n         \"amount\":299\n      }\n   ],\n   \"area\":[\n      {\n         \"type\":\"Point\",\n         \"coordinates\":[\n            53,\n            37\n         ]\n      }\n   ]\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/pollution/v1/co/0.0,10.0/03-2001.json?appid={{APPID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"pollution",
+								"v1",
+								"co",
+								"0.0,10.0",
+								"03-2001.json"
+							],
+							"query": [
+								{
+									"key": "appid",
+									"value": "{{APPID}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "119fa1c2-05e6-4c7a-802a-75da3ab0f742",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "ed8fb9e2-aaa4-40ee-b7c7-4641aed31b6f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "58efb5d2-2721-420a-85bc-4c7db977dab6",
+			"key": "APPID",
+			"value": "ca1bf9b995f2cdaf61b8707cbd3e66b3",
+			"type": "text"
+		}
+	]
+}
