@@ -1971,10 +1971,10 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "6c2fe592-6837-4490-8be3-fea6e4eee80b",
+								"id": "cd4b1c40-6d76-461d-9d1b-9c4dc1d51057",
 								"type": "text/javascript",
 								"exec": [
-									"tests[\"Status code is 404\"] = responseCode.code === 404;",
+									"tests[\"Status code is 500\"] = responseCode.code === 500;",
 									""
 								]
 							}
@@ -2007,10 +2007,10 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "08d1201d-5ccb-4d2d-b75c-d2daceac9e70",
+								"id": "25097d93-ab79-40d0-b49a-024d4b8f4e57",
 								"type": "text/javascript",
 								"exec": [
-									"tests[\"Status code is 400\"] = responseCode.code === 400;"
+									"tests[\"Status code is 500\"] = responseCode.code === 500;"
 								]
 							}
 						}
@@ -3300,7 +3300,7 @@
 	],
 	"variable": [
 		{
-			"id": "58efb5d2-2721-420a-85bc-4c7db977dab6",
+			"id": "e1104176-241b-4bee-ac76-0c523e85ce0c",
 			"key": "APPID",
 			"value": "ca1bf9b995f2cdaf61b8707cbd3e66b3",
 			"type": "text"
