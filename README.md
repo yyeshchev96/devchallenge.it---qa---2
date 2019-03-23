@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/yyeshchev96/devchallenge.it---qa---2.svg?branch=master)](https://travis-ci.org/yyeshchev96/devchallenge.it---qa---2)
+
 # devchallenge.it---qa---2
 
 **API tests for OpenWeatherMap** - https://openweathermap.org/api
