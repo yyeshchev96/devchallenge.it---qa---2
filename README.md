@@ -39,7 +39,7 @@ To work with tests localy, please download this repository and unarchive files
 	`cd ~/Downloads/devchallenge.it---qa---2/`
 
 ## All: Once you navigated to project folder, type the following command:
-4. `newman run "devchallenge-r2.tests.json" -e "devchallenge-r2.env.json" --export-environment "devchallenge-r2.env.json" -r cli,htmlextra --reporter-htmlextra-export "reports/APITestSummary.html" --reporter-htmlextra-darkTheme`
+4. `newman run "devchallenge-r2-tests.json" -e "devchallenge-r2-env.json" --export-environment "devchallenge-r2-env.json" -r cli,htmlextra --reporter-htmlextra-export "reports/APITestSummary.html" --reporter-htmlextra-darkTheme`
 
 Test execution result will be displayed in the console
 
