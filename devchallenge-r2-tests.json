@@ -2912,95 +2912,6 @@
 					"response": []
 				},
 				{
-					"name": "Delete trigger by id",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "d73740ba-1b3a-472d-9678-9264d5c559fc",
-								"type": "text/javascript",
-								"exec": [
-									"tests[\"Status code is 204\"] = responseCode.code === 204;",
-									"",
-									""
-								]
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {},
-						"url": {
-							"raw": "{{WeatherAlertURL}}/triggers/{{trigger_id}}?APPID={{APPID}}",
-							"host": [
-								"{{WeatherAlertURL}}"
-							],
-							"path": [
-								"triggers",
-								"{{trigger_id}}"
-							],
-							"query": [
-								{
-									"key": "APPID",
-									"value": "{{APPID}}"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get deleted trigger by Id",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "5a848065-e11d-48fe-b824-965193b1be90",
-								"type": "text/javascript",
-								"exec": [
-									"tests[\"Status code is 404\"] = responseCode.code === 404;"
-								]
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{WeatherAlertURL}}/triggers/{{trigger_id}}?APPID={{APPID}}",
-							"host": [
-								"{{WeatherAlertURL}}"
-							],
-							"path": [
-								"triggers",
-								"{{trigger_id}}"
-							],
-							"query": [
-								{
-									"key": "APPID",
-									"value": "{{APPID}}"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Delete unexisting trigger",
 					"event": [
 						{
@@ -3260,7 +3171,7 @@
 	],
 	"variable": [
 		{
-			"id": "480bb882-e04e-4a7b-9cce-f0f0c7a43f4a",
+			"id": "951d0b6e-772a-4c39-8854-4bbe43edcea9",
 			"key": "APPID",
 			"value": "ca1bf9b995f2cdaf61b8707cbd3e66b3",
 			"type": "string"
